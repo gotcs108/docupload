@@ -5,8 +5,14 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
+API_key = 'insert_your_api_key'
+
 
 class ApiManager:
+    """
+    Builds Google Drive/Docs API specified objects
+    """
+
     creds = None
     _drive_service = None
     _docs_service = None
@@ -14,8 +20,8 @@ class ApiManager:
 
     def __init__(self):
         self.scopes = [
-            'https://www.googleapis.com/auth/drive.metadata.readonly',
-            'https://www.googleapis.com/auth/documents.readonly']
+            'https://www.googleapis.com/auth/drive',
+            'https://www.googleapis.com/auth/documents']
         self.creds = login(self.scopes)
         self.drive_service = build_drive(self.creds)
         self._docs_service = build_docs(self.creds)
@@ -38,6 +44,12 @@ class ApiManager:
 
 
 class ItemList:
+    """
+    Stores a list of "File Resources".
+
+    Users are encouraged to access modify ItemList through ItemListManager.
+    """
+
     _item_list = []
 
     def __init__(self, item_list=None):
@@ -54,6 +66,10 @@ class ItemList:
 
 
 class ItemListManager:
+    """
+    Retrieve/manipulate "File Resource" objects
+    """
+
     api_manager: ApiManager
     itemList: ItemList
 
@@ -139,7 +155,7 @@ def login(scopes):
 
 
 def build_drive(creds):
-    return build('drive', 'v3', credentials=creds)
+    return build('drive', 'v3', credentials=creds, developerKey=API_key)
 
 
 def build_docs(creds):

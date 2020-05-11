@@ -1,5 +1,4 @@
 from typing import List
-
 from DriveComponent import ApiManager
 
 
@@ -49,11 +48,12 @@ class DocFactory:
         self.api_manager = ApiManager()
 
     def file_to_doc(self, file: dict) -> Document:
-        doc = self.api_manager.docs_service.documents().get(documentId=file['id']).execute()
-        body = doc['body']
+        api_manager = self.api_manager
+        # doc = api_manager.docs_service.documents().get(documentId=file['id']).execute()
         name = file['name']
         file_id = file['id']
         mime = file['mimeType']
+        body = api_manager.drive_service.files().export(fileId=file_id, mimeType="text/plain").execute()
         document = Document(name, body, file_id, mime)
         return document
 
